@@ -1,0 +1,631 @@
+openapi: 3.0.0
+info:
+  title: API de Gestion de Bibliothèque
+  description: |
+    Une API REST complète pour la gestion d'une bibliothèque moderne.
+    
+    Cette API permet de gérer :
+    - Les bibliothécaires et leur expertise
+    - Les événements et activités de la bibliothèque
+    - Les lecteurs et leurs inscriptions
+    - Les relations entre lecteurs et événements
+    
+    Développée avec Node.js, Express et PostgreSQL.
+  version: 1.0.0
+  contact:
+    name: Crypt0nik
+    url: https://github.com/Crypt0nik/CodingGame
+    email: support@bibliotheque.fr
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+servers:
+  - url: http://localhost:3000/api
+    description: Serveur de développement
+  - url: https://api.bibliotheque.fr/api
+    description: Serveur de production
+
+tags:
+  - name: Bibliothécaires
+    description: Gestion des employés de la bibliothèque
+  - name: Événements
+    description: Gestion des activités et ateliers
+  - name: Lecteurs
+    description: Gestion des membres de la bibliothèque
+  - name: Inscriptions
+    description: Gestion des inscriptions aux événements
+
+paths:
+  # === BIBLIOTHÉCAIRES ===
+  /bibliothecaires:
+    get:
+      tags:
+        - Bibliothécaires
+      summary: Liste tous les bibliothécaires
+      description: Récupère la liste complète des bibliothécaires avec leurs spécialités
+      responses:
+        '200':
+          description: Liste des bibliothécaires récupérée avec succès
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Bibliothecaire'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      tags:
+        - Bibliothécaires
+      summary: Créer un nouveau bibliothécaire
+      description: Ajoute un nouveau bibliothécaire à l'équipe
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BibliothecaireInput'
+            example:
+              nom: "Dupont"
+              prenom: "Marie"
+              email: "marie.dupont@bibliotheque.fr"
+              telephone: "0123456789"
+              specialite: "Littérature contemporaine"
+      responses:
+        '201':
+          description: Bibliothécaire créé avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bibliothecaire'
+        '400':
+          description: Données invalides
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /bibliothecaires/{id}:
+    get:
+      tags:
+        - Bibliothécaires
+      summary: Obtenir un bibliothécaire par ID
+      description: Récupère les détails d'un bibliothécaire spécifique
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID du bibliothécaire
+      responses:
+        '200':
+          description: Bibliothécaire trouvé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bibliothecaire'
+        '404':
+          description: Bibliothécaire non trouvé
+
+    put:
+      tags:
+        - Bibliothécaires
+      summary: Modifier un bibliothécaire
+      description: Met à jour les informations d'un bibliothécaire existant
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID du bibliothécaire
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BibliothecaireInput'
+      responses:
+        '200':
+          description: Bibliothécaire modifié avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bibliothecaire'
+        '404':
+          description: Bibliothécaire non trouvé
+
+    delete:
+      tags:
+        - Bibliothécaires
+      summary: Supprimer un bibliothécaire
+      description: Supprime définitivement un bibliothécaire
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID du bibliothécaire
+      responses:
+        '200':
+          description: Bibliothécaire supprimé avec succès
+        '404':
+          description: Bibliothécaire non trouvé
+
+  # === ÉVÉNEMENTS ===
+  /evenements:
+    get:
+      tags:
+        - Événements
+      summary: Liste tous les événements
+      description: Récupère tous les événements avec les détails des bibliothécaires responsables
+      responses:
+        '200':
+          description: Liste des événements récupérée
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EvenementComplet'
+
+    post:
+      tags:
+        - Événements
+      summary: Créer un nouvel événement
+      description: Organise un nouvel atelier ou activité
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EvenementInput'
+            example:
+              titre: "Atelier d'écriture créative"
+              description: "Découvrez les techniques de l'écriture créative avec un auteur professionnel"
+              date_debut: "2024-03-15T14:00:00"
+              date_fin: "2024-03-15T16:00:00"
+              lieu: "Salle de conférence - 1er étage"
+              max_participants: 15
+              bibliothecaire_id: 1
+      responses:
+        '201':
+          description: Événement créé avec succès
+
+  /evenements/{id}:
+    get:
+      tags:
+        - Événements
+      summary: Obtenir un événement par ID
+      description: Récupère les détails complets d'un événement
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Événement trouvé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EvenementComplet'
+
+    put:
+      tags:
+        - Événements
+      summary: Modifier un événement
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EvenementInput'
+      responses:
+        '200':
+          description: Événement modifié avec succès
+
+    delete:
+      tags:
+        - Événements
+      summary: Supprimer un événement
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Événement supprimé avec succès
+
+  # === LECTEURS ===
+  /lecteurs:
+    get:
+      tags:
+        - Lecteurs
+      summary: Liste tous les lecteurs
+      description: Récupère la liste de tous les membres inscrits
+      responses:
+        '200':
+          description: Liste des lecteurs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Lecteur'
+
+    post:
+      tags:
+        - Lecteurs
+      summary: Inscrire un nouveau lecteur
+      description: Enregistre un nouveau membre à la bibliothèque
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LecteurInput'
+            example:
+              nom: "Martin"
+              prenom: "Pierre"
+              email: "pierre.martin@email.com"
+              telephone: "0987654321"
+              adresse: "123 Rue de la Paix, 75001 Paris"
+              date_naissance: "1990-05-15"
+      responses:
+        '201':
+          description: Lecteur inscrit avec succès
+
+  /lecteurs/{id}:
+    get:
+      tags:
+        - Lecteurs
+      summary: Obtenir un lecteur par ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lecteur trouvé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lecteur'
+
+    put:
+      tags:
+        - Lecteurs
+      summary: Modifier un lecteur
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LecteurInput'
+      responses:
+        '200':
+          description: Lecteur modifié avec succès
+
+    delete:
+      tags:
+        - Lecteurs
+      summary: Supprimer un lecteur
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lecteur supprimé avec succès
+
+  # === INSCRIPTIONS ===
+  /lecteurs/{id}/evenements:
+    get:
+      tags:
+        - Inscriptions
+      summary: Événements d'un lecteur
+      description: Liste tous les événements auxquels un lecteur est inscrit
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID du lecteur
+      responses:
+        '200':
+          description: Liste des événements du lecteur
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EvenementComplet'
+
+    post:
+      tags:
+        - Inscriptions
+      summary: Inscrire un lecteur à un événement
+      description: Permet à un lecteur de s'inscrire à un événement
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID du lecteur
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                evenement_id:
+                  type: integer
+                  description: ID de l'événement
+              required:
+                - evenement_id
+            example:
+              evenement_id: 1
+      responses:
+        '201':
+          description: Inscription réussie
+        '400':
+          description: Événement complet ou lecteur déjà inscrit
+        '404':
+          description: Lecteur ou événement non trouvé
+
+  /lecteurs/{lecteurId}/evenements/{evenementId}:
+    delete:
+      tags:
+        - Inscriptions
+      summary: Désinscrire un lecteur d'un événement
+      description: Annule l'inscription d'un lecteur à un événement
+      parameters:
+        - name: lecteurId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: evenementId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Désinscription réussie
+        '404':
+          description: Inscription non trouvée
+
+components:
+  schemas:
+    Bibliothecaire:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Identifiant unique du bibliothécaire
+        nom:
+          type: string
+          description: Nom de famille
+        prenom:
+          type: string
+          description: Prénom
+        email:
+          type: string
+          format: email
+          description: Adresse email professionnelle
+        telephone:
+          type: string
+          description: Numéro de téléphone
+        specialite:
+          type: string
+          description: Domaine d'expertise
+        date_embauche:
+          type: string
+          format: date-time
+          description: Date d'embauche
+      example:
+        id: 1
+        nom: "Dupont"
+        prenom: "Marie"
+        email: "marie.dupont@bibliotheque.fr"
+        telephone: "0123456789"
+        specialite: "Littérature contemporaine"
+        date_embauche: "2023-01-15T09:00:00Z"
+
+    BibliothecaireInput:
+      type: object
+      required:
+        - nom
+        - prenom
+        - email
+        - specialite
+      properties:
+        nom:
+          type: string
+          minLength: 2
+          maxLength: 100
+        prenom:
+          type: string
+          minLength: 2
+          maxLength: 100
+        email:
+          type: string
+          format: email
+        telephone:
+          type: string
+          pattern: '^[0-9+\-\s]+$'
+        specialite:
+          type: string
+          minLength: 5
+          maxLength: 200
+
+    Evenement:
+      type: object
+      properties:
+        id:
+          type: integer
+        titre:
+          type: string
+        description:
+          type: string
+        date_debut:
+          type: string
+          format: date-time
+        date_fin:
+          type: string
+          format: date-time
+        lieu:
+          type: string
+        max_participants:
+          type: integer
+        bibliothecaire_id:
+          type: integer
+        date_creation:
+          type: string
+          format: date-time
+
+    EvenementComplet:
+      allOf:
+        - $ref: '#/components/schemas/Evenement'
+        - type: object
+          properties:
+            bibliothecaire_nom:
+              type: string
+              description: Nom du bibliothécaire responsable
+            bibliothecaire_prenom:
+              type: string
+              description: Prénom du bibliothécaire responsable
+            nombre_inscrits:
+              type: integer
+              description: Nombre actuel d'inscrits
+
+    EvenementInput:
+      type: object
+      required:
+        - titre
+        - description
+        - date_debut
+        - date_fin
+        - lieu
+        - max_participants
+        - bibliothecaire_id
+      properties:
+        titre:
+          type: string
+          minLength: 5
+          maxLength: 200
+        description:
+          type: string
+          minLength: 10
+          maxLength: 1000
+        date_debut:
+          type: string
+          format: date-time
+        date_fin:
+          type: string
+          format: date-time
+        lieu:
+          type: string
+          minLength: 5
+          maxLength: 200
+        max_participants:
+          type: integer
+          minimum: 1
+          maximum: 100
+        bibliothecaire_id:
+          type: integer
+
+    Lecteur:
+      type: object
+      properties:
+        id:
+          type: integer
+        nom:
+          type: string
+        prenom:
+          type: string
+        email:
+          type: string
+          format: email
+        telephone:
+          type: string
+        adresse:
+          type: string
+        date_naissance:
+          type: string
+          format: date
+        date_inscription:
+          type: string
+          format: date-time
+
+    LecteurInput:
+      type: object
+      required:
+        - nom
+        - prenom
+        - email
+        - date_naissance
+      properties:
+        nom:
+          type: string
+          minLength: 2
+          maxLength: 100
+        prenom:
+          type: string
+          minLength: 2
+          maxLength: 100
+        email:
+          type: string
+          format: email
+        telephone:
+          type: string
+        adresse:
+          type: string
+          maxLength: 500
+        date_naissance:
+          type: string
+          format: date
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Message d'erreur
+        details:
+          type: string
+          description: Détails supplémentaires sur l'erreur
+      example:
+        error: "Ressource non trouvée"
+        details: "Le bibliothécaire avec l'ID 999 n'existe pas"

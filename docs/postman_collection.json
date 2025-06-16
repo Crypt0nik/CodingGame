@@ -1,0 +1,426 @@
+{
+  "info": {
+    "name": "API Bibliothèque - Collection Complète",
+    "description": "Collection Postman pour tester l'API de gestion de bibliothèque.\n\nCette collection contient tous les endpoints pour gérer :\n- Les bibliothécaires\n- Les événements\n- Les lecteurs\n- Les inscriptions aux événements",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "12345678-1234-1234-1234-123456789abc",
+    "updatedAt": "2024-01-15T10:00:00.000Z"
+  },
+  "item": [
+    {
+      "name": "👨‍💼 Bibliothécaires",
+      "item": [
+        {
+          "name": "📋 Lister tous les bibliothécaires",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/bibliothecaires",
+              "host": ["{{base_url}}"],
+              "path": ["bibliothecaires"]
+            },
+            "description": "Récupère la liste complète de tous les bibliothécaires avec leurs spécialités."
+          },
+          "response": []
+        },
+        {
+          "name": "👤 Obtenir un bibliothécaire",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/bibliothecaires/{{bibliothecaire_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["bibliothecaires", "{{bibliothecaire_id}}"]
+            },
+            "description": "Récupère les détails d'un bibliothécaire spécifique par son ID."
+          },
+          "response": []
+        },
+        {
+          "name": "➕ Créer un bibliothécaire",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nom\": \"Dupont\",\n  \"prenom\": \"Marie\",\n  \"email\": \"marie.dupont@bibliotheque.fr\",\n  \"telephone\": \"0123456789\",\n  \"specialite\": \"Littérature contemporaine\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/bibliothecaires",
+              "host": ["{{base_url}}"],
+              "path": ["bibliothecaires"]
+            },
+            "description": "Créer un nouveau bibliothécaire avec ses informations personnelles et sa spécialité."
+          },
+          "response": []
+        },
+        {
+          "name": "✏️ Modifier un bibliothécaire",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nom\": \"Dupont\",\n  \"prenom\": \"Marie-Claire\",\n  \"email\": \"marie.dupont@bibliotheque.fr\",\n  \"telephone\": \"0123456789\",\n  \"specialite\": \"Littérature contemporaine et jeunesse\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/bibliothecaires/{{bibliothecaire_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["bibliothecaires", "{{bibliothecaire_id}}"]
+            },
+            "description": "Mettre à jour les informations d'un bibliothécaire existant."
+          },
+          "response": []
+        },
+        {
+          "name": "🗑️ Supprimer un bibliothécaire",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/bibliothecaires/{{bibliothecaire_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["bibliothecaires", "{{bibliothecaire_id}}"]
+            },
+            "description": "Supprimer définitivement un bibliothécaire de la base de données."
+          },
+          "response": []
+        }
+      ],
+      "description": "Gestion complète des bibliothécaires : création, consultation, modification et suppression."
+    },
+    {
+      "name": "📅 Événements",
+      "item": [
+        {
+          "name": "📋 Lister tous les événements",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/evenements",
+              "host": ["{{base_url}}"],
+              "path": ["evenements"]
+            },
+            "description": "Récupère tous les événements avec les informations des bibliothécaires responsables."
+          },
+          "response": []
+        },
+        {
+          "name": "🎯 Obtenir un événement",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/evenements/{{evenement_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["evenements", "{{evenement_id}}"]
+            },
+            "description": "Récupère les détails complets d'un événement spécifique."
+          },
+          "response": []
+        },
+        {
+          "name": "➕ Créer un événement",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titre\": \"Atelier d'écriture créative\",\n  \"description\": \"Découvrez les techniques de l'écriture créative avec un auteur professionnel. Cet atelier s'adresse aux débutants comme aux écrivains confirmés.\",\n  \"date_debut\": \"2024-03-15T14:00:00\",\n  \"date_fin\": \"2024-03-15T16:00:00\",\n  \"lieu\": \"Salle de conférence - 1er étage\",\n  \"max_participants\": 15,\n  \"bibliothecaire_id\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/evenements",
+              "host": ["{{base_url}}"],
+              "path": ["evenements"]
+            },
+            "description": "Créer un nouvel événement (atelier, conférence, activité)."
+          },
+          "response": []
+        },
+        {
+          "name": "✏️ Modifier un événement",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titre\": \"Atelier d'écriture créative - Niveau avancé\",\n  \"description\": \"Atelier d'écriture créative pour écrivains confirmés. Techniques avancées de narration et de style.\",\n  \"date_debut\": \"2024-03-15T14:00:00\",\n  \"date_fin\": \"2024-03-15T17:00:00\",\n  \"lieu\": \"Salle de conférence - 1er étage\",\n  \"max_participants\": 12,\n  \"bibliothecaire_id\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/evenements/{{evenement_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["evenements", "{{evenement_id}}"]
+            },
+            "description": "Modifier les détails d'un événement existant."
+          },
+          "response": []
+        },
+        {
+          "name": "🗑️ Supprimer un événement",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/evenements/{{evenement_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["evenements", "{{evenement_id}}"]
+            },
+            "description": "Supprimer un événement et toutes les inscriptions associées."
+          },
+          "response": []
+        }
+      ],
+      "description": "Gestion des événements de la bibliothèque : ateliers, conférences et activités."
+    },
+    {
+      "name": "👥 Lecteurs",
+      "item": [
+        {
+          "name": "📋 Lister tous les lecteurs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/lecteurs",
+              "host": ["{{base_url}}"],
+              "path": ["lecteurs"]
+            },
+            "description": "Récupère la liste de tous les lecteurs inscrits à la bibliothèque."
+          },
+          "response": []
+        },
+        {
+          "name": "👤 Obtenir un lecteur",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/lecteurs/{{lecteur_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["lecteurs", "{{lecteur_id}}"]
+            },
+            "description": "Récupère les informations détaillées d'un lecteur spécifique."
+          },
+          "response": []
+        },
+        {
+          "name": "➕ Inscrire un lecteur",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nom\": \"Martin\",\n  \"prenom\": \"Pierre\",\n  \"email\": \"pierre.martin@email.com\",\n  \"telephone\": \"0987654321\",\n  \"adresse\": \"123 Rue de la Paix, 75001 Paris\",\n  \"date_naissance\": \"1990-05-15\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/lecteurs",
+              "host": ["{{base_url}}"],
+              "path": ["lecteurs"]
+            },
+            "description": "Inscrire un nouveau lecteur à la bibliothèque."
+          },
+          "response": []
+        },
+        {
+          "name": "✏️ Modifier un lecteur",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nom\": \"Martin\",\n  \"prenom\": \"Pierre-Alexandre\",\n  \"email\": \"pierre.martin@newemail.com\",\n  \"telephone\": \"0987654321\",\n  \"adresse\": \"456 Avenue des Champs, 75008 Paris\",\n  \"date_naissance\": \"1990-05-15\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/lecteurs/{{lecteur_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["lecteurs", "{{lecteur_id}}"]
+            },
+            "description": "Mettre à jour les informations d'un lecteur existant."
+          },
+          "response": []
+        },
+        {
+          "name": "🗑️ Supprimer un lecteur",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/lecteurs/{{lecteur_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["lecteurs", "{{lecteur_id}}"]
+            },
+            "description": "Supprimer un lecteur et toutes ses inscriptions aux événements."
+          },
+          "response": []
+        }
+      ],
+      "description": "Gestion des lecteurs membres de la bibliothèque."
+    },
+    {
+      "name": "🎫 Inscriptions aux Événements",
+      "item": [
+        {
+          "name": "📋 Événements d'un lecteur",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/lecteurs/{{lecteur_id}}/evenements",
+              "host": ["{{base_url}}"],
+              "path": ["lecteurs", "{{lecteur_id}}", "evenements"]
+            },
+            "description": "Récupère tous les événements auxquels un lecteur est inscrit."
+          },
+          "response": []
+        },
+        {
+          "name": "➕ Inscrire à un événement",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"evenement_id\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/lecteurs/{{lecteur_id}}/evenements",
+              "host": ["{{base_url}}"],
+              "path": ["lecteurs", "{{lecteur_id}}", "evenements"]
+            },
+            "description": "Inscrire un lecteur à un événement spécifique."
+          },
+          "response": []
+        },
+        {
+          "name": "🗑️ Désinscrire d'un événement",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/lecteurs/{{lecteur_id}}/evenements/{{evenement_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["lecteurs", "{{lecteur_id}}", "evenements", "{{evenement_id}}"]
+            },
+            "description": "Désinscrire un lecteur d'un événement."
+          },
+          "response": []
+        }
+      ],
+      "description": "Gestion des inscriptions des lecteurs aux différents événements."
+    },
+    {
+      "name": "🧪 Tests et Exemples",
+      "item": [
+        {
+          "name": "🔄 Workflow complet",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/bibliothecaires",
+              "host": ["{{base_url}}"],
+              "path": ["bibliothecaires"]
+            },
+            "description": "Test workflow : Créer un bibliothécaire → Créer un événement → Inscrire un lecteur → Inscrire à l'événement"
+          },
+          "response": []
+        }
+      ],
+      "description": "Exemples de workflows et tests complets de l'API."
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000/api",
+      "description": "URL de base de l'API (développement)"
+    },
+    {
+      "key": "bibliothecaire_id",
+      "value": "1",
+      "description": "ID d'exemple pour les tests de bibliothécaire"
+    },
+    {
+      "key": "evenement_id",
+      "value": "1",
+      "description": "ID d'exemple pour les tests d'événement"
+    },
+    {
+      "key": "lecteur_id",
+      "value": "1",
+      "description": "ID d'exemple pour les tests de lecteur"
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Script de pré-requête global",
+          "console.log('Exécution de la requête vers:', pm.request.url.toString());"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Tests globaux pour toutes les requêtes",
+          "pm.test('Status code should be successful', function () {",
+          "    pm.response.to.have.status.oneOf([200, 201, 204]);",
+          "});",
+          "",
+          "pm.test('Response time is less than 2000ms', function () {",
+          "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+          "});",
+          "",
+          "if (pm.response.headers.get('Content-Type') && pm.response.headers.get('Content-Type').includes('application/json')) {",
+          "    pm.test('Response is valid JSON', function () {",
+          "        pm.response.to.be.json;",
+          "    });",
+          "}"
+        ]
+      }
+    }
+  ]
+}
